@@ -16,7 +16,6 @@ Rules:
 
 _*:
 - [FastAPI](https://fastapi.tiangolo.com/);
-- [PostgreSQL](https://www.postgresql.org/docs/);
 - [Docker](https://docs.docker.com/);
 - [Pyrebase4](https://github.com/nhorvath/Pyrebase4);
 - [Firebase](https://firebase.google.com/docs);

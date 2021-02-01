@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from app.config.db import database, engine, metadata
+from app.routers import school
 
-metadata.create_all(engine)
+# TODO: Check tables creation via main.py - bug;
+# metadata.create_all(engine)
 
 app = FastAPI()
 
@@ -15,6 +17,5 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
-# @app.get("/ping")
-# def pong():
-#     return {"ping": "pong!"}
+
+app.include_router(school.router, prefix="/schools", tags=["schools"])

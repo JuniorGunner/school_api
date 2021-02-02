@@ -67,3 +67,39 @@ def test_read_all_schools(test_app, monkeypatch):
     response = test_app.get("/schools/")
     assert response.status_code == 200
     assert response.json() == test_data
+
+# PUT TESTS
+def test_update_school(test_app, monkeypatch):
+    test_update_data = {"name": "some school", "id": 1}
+
+    async def mock_get(id):
+        return True
+
+    monkeypatch.setattr(school, "get", mock_get)
+
+    async def mock_put(id, payload):
+        return 1
+
+    monkeypatch.setattr(school, "put", mock_put)
+
+    response = test_app.put("/schools/1", data=json.dumps(test_update_data))
+    assert response.status_code == 200
+    assert response.json() == test_update_data
+
+
+@pytest.mark.parametrize(
+    "id, payload, status_code",
+    [
+        [1, {}, 422],
+        [999, {"name": "foo"}, 404],
+        [0, {"name": "foo"}, 404] # TODO: Check 422 status
+    ],
+)
+def test_update_school_invalid(test_app, monkeypatch, id, payload, status_code):
+    async def mock_get(id):
+        return None
+
+    monkeypatch.setattr(school, "get", mock_get)
+
+    response = test_app.put(f"/schools/{id}", data=json.dumps(payload),)
+    assert response.status_code == status_code

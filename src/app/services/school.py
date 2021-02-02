@@ -16,3 +16,14 @@ async def get(id: int):
 async def get_all():
     query = schools.select()
     return await database.fetch_all(query=query)
+
+
+async def put(id: int , payload: SchoolSchema):
+    query =  (
+        schools
+        .update()
+        .where(id == schools.c.id)
+        .values(name=payload.name)
+        .returning(schools.c.id)
+    )
+    return await database.execute(query=query)

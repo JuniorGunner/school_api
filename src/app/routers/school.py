@@ -29,3 +29,19 @@ async def read_school(id: int):
 @router.get("/", response_model=List[SchoolDB])
 async def read_all_schools():
     return await school.get_all()
+
+
+@router.put("/{id}", response_model=SchoolDB)
+async def update_school(id: int, payload: SchoolSchema):
+    school_data = await school.get(id)
+    if not school_data:
+        raise HTTPException(status_code=404, detail="School not found")
+
+    school_id = await school.put(id, payload)
+
+    response_object = {
+        "id": school_id,
+        "name": payload.name
+    }
+
+    return response_object
